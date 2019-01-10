@@ -12,7 +12,7 @@ TILESONSCREENH = 13
 SCREENH = TILESONSCREENH*TILESIZE
 SCREENW = TILESONSCREENW*TILESIZE
 #create character vars
-circleRad = 30
+circleRad = 20
 circleSpeed = 4
 #create circle pos vars
 circleX = 250
@@ -108,6 +108,8 @@ class Player:
 					self.rect.bottom = tree.top
 				if newY < 0: # Moving up; Hit the bottom side of the wall
 					self.rect.top = tree.bottom
+		self.playerX = self.rect.left
+		self.playerY = self.rect.top
 
 	def update(self):
 		DISPLAYSURF.blit(self.playerSurface, (SCREENW/2-self.size ,SCREENH/2-self.size))
