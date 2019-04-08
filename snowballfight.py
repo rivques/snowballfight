@@ -28,6 +28,18 @@ playerOnTileS = pygame.Surface((MAPWIDTH*TILESIZE, MAPHEIGHT*TILESIZE))
 #constants for the tilemap
 GRASS = pygame.image.load("grass.png")
 TREE = pygame.image.load("tree.png")
+def doRectsOverlap(rect1, rect2):
+	for a, b in [(rect1, rect2), (rect2, rect1)]:
+		if ((isPointInsideRect(a.left, a.top, b)) or (isPointInsideRect(a.left, a.bottom, b))) or ((isPointInsideRect(a.right, a.top, b)) or (isPointInsideRect(a.right, a.bottom, b))):
+			return True
+		else:
+ 			return False
+def isPointInsideRect(x, y, rect):
+	if (x > rect.left) and (x < rect.right) and (y > rect.top) and (y < rect.bottom):
+		return True
+	else:
+		return False
+
 
 #convert grass
 
@@ -97,19 +109,13 @@ class Player:
 		self.rect.left = self.playerX
 		self.rect.top = self.playerY
 		for tree in treeRects:
-			if self.rect.colliderect(tree):
+			if doRectsOverlap(self.rect,tree):
 				self.numcollisions += 1
 				print("collision!"+str(self.numcollisions))
-				if newX > 0: # Moving right; Hit the left side of the wall
-					self.rect.right = tree.left
-				if newX < 0: # Moving left; Hit the right side of the wall
-					self.rect.left = tree.right
-				if newY > 0: # Moving down; Hit the top side of the wall
-					self.rect.bottom = tree.top
-				if newY < 0: # Moving up; Hit the bottom side of the wall
-					self.rect.top = tree.bottom
-		self.playerX = self.rect.left
-		self.playerY = self.rect.top
+				self.playerX -= newX
+				self.playerY -= newY
+		self.rect.left = self.playerX
+		self.rect.top = self.playerY
 
 	def update(self):
 		DISPLAYSURF.blit(self.playerSurface, (SCREENW/2-self.size ,SCREENH/2-self.size))
